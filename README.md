@@ -410,9 +410,6 @@ This notebook represents the culmination of the project with advanced modeling t
 - Provides detailed marketing recommendations with justifications and ROI estimates
 - Exports predictions as a structured CSV ready for business implementation
 
-## License
-[Add your chosen license here]
-
 ## Acknowledgments
 - **Data Sources**:
   - Spotify Charts API for global chart data
