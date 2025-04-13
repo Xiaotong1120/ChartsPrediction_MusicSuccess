@@ -147,7 +147,58 @@ This notebook performs comprehensive exploratory data analysis, feature engineer
 - Identifies key audio features that distinguish ranked vs. non-ranked tracks
 - Analyzes confusion matrices to understand model errors
 - Discovers model limitations with highly imbalanced data
+ 
+## FinalModel.ipynb
+This notebook represents the culmination of the project with advanced modeling techniques and business-focused applications:
 
+### Features
+- **Enhanced Feature Engineering**: Creates 18 sophisticated derived features:
+  - **Music Theory Features**: Energy-to-acoustic ratio, dance-valence product, vocal-instrumental balance
+  - **Audience Perception Features**: Rhythm factor, mood intensity, calmness factor
+  - **Categorical Flags**: Binary indicators for instrumental, rhythmic, energetic, and happy tracks
+  - **Non-linear Transformations**: Log-transformed acousticness and instrumentalness, loudness squared and cubed
+  - **Composite Indicators**: Mainstream popularity index, experimental index, loudness-energy interaction, vocal clarity
+- **Balanced Sampling Strategies**: Implements three different ratios to address extreme class imbalance (97.31% non-ranked songs):
+  - 1:2 balanced datasets (high recall optimization)
+  - 1:3 balanced datasets (balanced precision-recall)
+  - 1:5 balanced datasets (high precision optimization)
+- **Multi-Model Ensemble System**: Develops a tiered prediction system combining strengths of multiple models:
+  - Random Forest models with different balancing ratios
+  - Gradient Boosting Trees with optimized thresholds
+  - Weighted voting ensemble for final predictions
+- **Threshold Optimization**: Fine-tunes decision thresholds across probability ranges (0.05-0.30) to maximize F2 score
+- **Business-Oriented Output**: Generates structured marketing recommendations with confidence tiers and ROI estimates
+
+### Technical Details
+- Uses **PySpark ML** for highly scalable machine learning on the full dataset
+- Implements feature importance analysis to identify key predictors of chart success
+- Creates specialized evaluation metrics focused on business value (F2 score prioritizing recall)
+- Develops a confidence-based prediction system with four distinct tiers
+- Generates comprehensive marketing recommendations with business justifications
+- Exports results to CSV format for marketing team consumption
+
+### Implementation Highlights
+- **Dynamic Thresholding**: Programmatically tests multiple probability thresholds to find optimal decision boundaries
+- **Weighted Ensemble Voting**: Combines predictions using a weighted scheme (0.4, 0.3, 0.2, 0.1) for model integration
+- **Confidence-Level Assignment**: Uses weighted probabilities to assign songs to appropriate marketing tiers
+- **Comprehensive Evaluation**: Analyzes model performance across multiple metrics (accuracy, precision, recall, F1, F2, ROC-AUC, PR-AUC)
+- **Error Analysis**: Examines false positives and false negatives to understand model limitations
+
+### Business Results
+- Achieves high model performance with F1 scores up to 0.188 and AUC scores of 0.824
+- Creates a four-tier classification system with clear performance differentiation:
+  - **Tier A (Highly Likely to Chart)**: 26.58% actual chart rate - recommended for full promotion
+  - **Tier B (Moderately Likely to Chart)**: 10.93% actual chart rate - moderate promotion
+  - **Tier C (Low Likelihood to Chart)**: 4.70% actual chart rate - limited promotion
+  - **Tier D (Unlikely to Chart)**: 0.81% actual chart rate - basic support only
+- Identifies the most important features for chart prediction:
+  - loudness_squared (0.077)
+  - experimental_index (0.076)
+  - vocal_instrumental_balance (0.075)
+  - instrumentalness (0.073)
+  - danceability (0.070)
+- Provides detailed marketing recommendations with justifications and ROI estimates
+- Exports predictions as a structured CSV ready for business implementation
 ## Dataset Schema
 The dataset contains rich information about tracks and their audio characteristics:
 
@@ -358,63 +409,13 @@ For deploying the song prediction system in production:
    tier_a_songs.select("name", "artists", "hit_score", "marketing_recommendation").write.csv("priority_songs.csv")
    ```
 
-## FinalModel.ipynb
-This notebook represents the culmination of the project with advanced modeling techniques and business-focused applications:
-
-### Features
-- **Enhanced Feature Engineering**: Creates 18 sophisticated derived features:
-  - **Music Theory Features**: Energy-to-acoustic ratio, dance-valence product, vocal-instrumental balance
-  - **Audience Perception Features**: Rhythm factor, mood intensity, calmness factor
-  - **Categorical Flags**: Binary indicators for instrumental, rhythmic, energetic, and happy tracks
-  - **Non-linear Transformations**: Log-transformed acousticness and instrumentalness, loudness squared and cubed
-  - **Composite Indicators**: Mainstream popularity index, experimental index, loudness-energy interaction, vocal clarity
-- **Balanced Sampling Strategies**: Implements three different ratios to address extreme class imbalance (97.31% non-ranked songs):
-  - 1:2 balanced datasets (high recall optimization)
-  - 1:3 balanced datasets (balanced precision-recall)
-  - 1:5 balanced datasets (high precision optimization)
-- **Multi-Model Ensemble System**: Develops a tiered prediction system combining strengths of multiple models:
-  - Random Forest models with different balancing ratios
-  - Gradient Boosting Trees with optimized thresholds
-  - Weighted voting ensemble for final predictions
-- **Threshold Optimization**: Fine-tunes decision thresholds across probability ranges (0.05-0.30) to maximize F2 score
-- **Business-Oriented Output**: Generates structured marketing recommendations with confidence tiers and ROI estimates
-
-### Technical Details
-- Uses **PySpark ML** for highly scalable machine learning on the full dataset
-- Implements feature importance analysis to identify key predictors of chart success
-- Creates specialized evaluation metrics focused on business value (F2 score prioritizing recall)
-- Develops a confidence-based prediction system with four distinct tiers
-- Generates comprehensive marketing recommendations with business justifications
-- Exports results to CSV format for marketing team consumption
-
-### Implementation Highlights
-- **Dynamic Thresholding**: Programmatically tests multiple probability thresholds to find optimal decision boundaries
-- **Weighted Ensemble Voting**: Combines predictions using a weighted scheme (0.4, 0.3, 0.2, 0.1) for model integration
-- **Confidence-Level Assignment**: Uses weighted probabilities to assign songs to appropriate marketing tiers
-- **Comprehensive Evaluation**: Analyzes model performance across multiple metrics (accuracy, precision, recall, F1, F2, ROC-AUC, PR-AUC)
-- **Error Analysis**: Examines false positives and false negatives to understand model limitations
-
-### Business Results
-- Achieves high model performance with F1 scores up to 0.188 and AUC scores of 0.824
-- Creates a four-tier classification system with clear performance differentiation:
-  - **Tier A (Highly Likely to Chart)**: 26.58% actual chart rate - recommended for full promotion
-  - **Tier B (Moderately Likely to Chart)**: 10.93% actual chart rate - moderate promotion
-  - **Tier C (Low Likelihood to Chart)**: 4.70% actual chart rate - limited promotion
-  - **Tier D (Unlikely to Chart)**: 0.81% actual chart rate - basic support only
-- Identifies the most important features for chart prediction:
-  - loudness_squared (0.077)
-  - experimental_index (0.076)
-  - vocal_instrumental_balance (0.075)
-  - instrumentalness (0.073)
-  - danceability (0.070)
-- Provides detailed marketing recommendations with justifications and ROI estimates
-- Exports predictions as a structured CSV ready for business implementation
-
 ## Acknowledgments
 - **Data Sources**:
   - Spotify Charts API for global chart data
   - Spotify Web API for detailed audio features
   - Spotify for Developers platform for documentation and support
+  - https://www.kaggle.com/datasets/rodolfofigueroa/spotify-12m-songs?resource=download
+  - https://www.kaggle.com/datasets/sunnykakar/spotify-charts-all-audio-data/data
 
 - **Technologies**:
   - Apache Spark community for the powerful distributed computing framework
